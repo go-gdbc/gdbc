@@ -8,43 +8,61 @@ import (
 	"strings"
 )
 
-type DataSourceOption func(dataSource *DataSource)
+type DataSourceOption func(dataSource DataSource)
 
 const Scheme = "gdbc"
 
-type DataSource struct {
+type DataSource interface {
+	GetDriverName() string
+	GetURL() *url.URL
+	GetConnection() (*sql.DB, error)
+	GetUsername() string
+	SetUsername(username string)
+	GetPassword() string
+	SetPassword(password string)
+}
+
+type SimpleDataSource struct {
 	driverName string
 	url        *url.URL
 	username   string
 	password   string
 }
 
-func (dataSource *DataSource) GetDriverName() string {
+func (dataSource *SimpleDataSource) GetDriverName() string {
 	return dataSource.driverName
 }
 
-func (dataSource *DataSource) GetURL() *url.URL {
+func (dataSource *SimpleDataSource) GetURL() *url.URL {
 	return dataSource.url
 }
 
-func (dataSource *DataSource) GetUsername() string {
+func (dataSource *SimpleDataSource) GetUsername() string {
 	return dataSource.username
 }
 
-func (dataSource *DataSource) GetPassword() string {
+func (dataSource *SimpleDataSource) SetUsername(username string) {
+	dataSource.username = username
+}
+
+func (dataSource *SimpleDataSource) GetPassword() string {
 	return dataSource.password
 }
 
-func (dataSource *DataSource) GetConnection() (*sql.DB, error) {
-	driversMu.RLock()
-	driver, ok := drivers[dataSource.driverName]
-	driversMu.RUnlock()
+func (dataSource *SimpleDataSource) SetPassword(password string) {
+	dataSource.password = password
+}
+
+func (dataSource *SimpleDataSource) GetConnection() (*sql.DB, error) {
+	dsnAdapterMu.RLock()
+	dsnAdapter, ok := dsnAdapters[dataSource.driverName]
+	dsnAdapterMu.RUnlock()
 
 	if !ok {
-		return nil, fmt.Errorf("sql: unknown driver %q (forgotten import?)", dataSource.driverName)
+		return nil, fmt.Errorf("sql: dsn adapter does not exist : %s", dataSource.driverName)
 	}
 
-	dataSourceName, err := driver.GetDataSourceName(dataSource)
+	dataSourceName, err := dsnAdapter.GetDataSourceName(dataSource)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +70,7 @@ func (dataSource *DataSource) GetConnection() (*sql.DB, error) {
 	return sql.Open(dataSource.driverName, dataSourceName)
 }
 
-func GetDataSource(url string, options ...DataSourceOption) (*DataSource, error) {
+func GetDataSource(url string, options ...DataSourceOption) (DataSource, error) {
 	dataSource, err := parse(url)
 	if err != nil {
 		return nil, err
@@ -65,18 +83,18 @@ func GetDataSource(url string, options ...DataSourceOption) (*DataSource, error)
 }
 
 func Username(username string) DataSourceOption {
-	return func(dataSource *DataSource) {
-		dataSource.username = username
+	return func(dataSource DataSource) {
+		dataSource.SetUsername(username)
 	}
 }
 
 func Password(password string) DataSourceOption {
-	return func(dataSource *DataSource) {
-		dataSource.password = password
+	return func(dataSource DataSource) {
+		dataSource.SetPassword(password)
 	}
 }
 
-func parse(dataSourceUrl string) (*DataSource, error) {
+func parse(dataSourceUrl string) (DataSource, error) {
 	src := strings.Split(dataSourceUrl, ":")
 	if len(src) < 3 {
 		return nil, errors.New("url format is wrong : " + dataSourceUrl)
@@ -92,7 +110,7 @@ func parse(dataSourceUrl string) (*DataSource, error) {
 		return nil, errors.New("driver name must not be empty")
 	}
 
-	dataSource := &DataSource{
+	dataSource := &SimpleDataSource{
 		driverName: driverName,
 	}
 	rest := strings.Join(append(src[:1], src[2:]...), ":")

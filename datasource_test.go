@@ -41,10 +41,10 @@ func TestParseDataSourceUrlWithOpaque(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "db", dataSource.url.Opaque)
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "db", dataSource.GetURL().Opaque)
 }
 
 func TestParseDataSourceUrlWithOpaqueAndArgs(t *testing.T) {
@@ -53,13 +53,13 @@ func TestParseDataSourceUrlWithOpaqueAndArgs(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "db", dataSource.url.Opaque)
-	assert.Equal(t, "value1", dataSource.url.Query().Get("arg1"))
-	assert.Equal(t, "value2", dataSource.url.Query().Get("arg2"))
-	assert.Equal(t, "", dataSource.url.Query().Get("arg3"))
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "db", dataSource.GetURL().Opaque)
+	assert.Equal(t, "value1", dataSource.GetURL().Query().Get("arg1"))
+	assert.Equal(t, "value2", dataSource.GetURL().Query().Get("arg2"))
+	assert.Equal(t, "", dataSource.GetURL().Query().Get("arg3"))
 }
 
 func TestParseDataSourceUrlWithHost(t *testing.T) {
@@ -68,10 +68,10 @@ func TestParseDataSourceUrlWithHost(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "localhost", dataSource.url.Host)
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "localhost", dataSource.GetURL().Host)
 }
 
 func TestParseDataSourceUrlWithHostAndArgs(t *testing.T) {
@@ -80,13 +80,13 @@ func TestParseDataSourceUrlWithHostAndArgs(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "localhost", dataSource.url.Host)
-	assert.Equal(t, "value1", dataSource.url.Query().Get("arg1"))
-	assert.Equal(t, "value2", dataSource.url.Query().Get("arg2"))
-	assert.Equal(t, "", dataSource.url.Query().Get("arg3"))
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "localhost", dataSource.GetURL().Host)
+	assert.Equal(t, "value1", dataSource.GetURL().Query().Get("arg1"))
+	assert.Equal(t, "value2", dataSource.GetURL().Query().Get("arg2"))
+	assert.Equal(t, "", dataSource.GetURL().Query().Get("arg3"))
 }
 
 func TestParseDataSourceUrlWithHostAndPort(t *testing.T) {
@@ -95,12 +95,12 @@ func TestParseDataSourceUrlWithHostAndPort(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "localhost:5432", dataSource.url.Host)
-	assert.Equal(t, "localhost", dataSource.url.Hostname())
-	assert.Equal(t, "5432", dataSource.url.Port())
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "localhost:5432", dataSource.GetURL().Host)
+	assert.Equal(t, "localhost", dataSource.GetURL().Hostname())
+	assert.Equal(t, "5432", dataSource.GetURL().Port())
 }
 
 func TestParseDataSourceUrlWithHostAndPortAndArgs(t *testing.T) {
@@ -109,15 +109,15 @@ func TestParseDataSourceUrlWithHostAndPortAndArgs(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "localhost:5432", dataSource.url.Host)
-	assert.Equal(t, "localhost", dataSource.url.Hostname())
-	assert.Equal(t, "5432", dataSource.url.Port())
-	assert.Equal(t, "value1", dataSource.url.Query().Get("arg1"))
-	assert.Equal(t, "value2", dataSource.url.Query().Get("arg2"))
-	assert.Equal(t, "", dataSource.url.Query().Get("arg3"))
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "localhost:5432", dataSource.GetURL().Host)
+	assert.Equal(t, "localhost", dataSource.GetURL().Hostname())
+	assert.Equal(t, "5432", dataSource.GetURL().Port())
+	assert.Equal(t, "value1", dataSource.GetURL().Query().Get("arg1"))
+	assert.Equal(t, "value2", dataSource.GetURL().Query().Get("arg2"))
+	assert.Equal(t, "", dataSource.GetURL().Query().Get("arg3"))
 }
 
 func TestParseDataSourceUrlWithHostAndUserInfo(t *testing.T) {
@@ -126,16 +126,16 @@ func TestParseDataSourceUrlWithHostAndUserInfo(t *testing.T) {
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)
 
-	assert.Equal(t, "driver-name", dataSource.driverName)
+	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 
-	assert.NotNil(t, dataSource.url)
-	assert.Equal(t, "localhost:5432", dataSource.url.Host)
-	assert.Equal(t, "localhost", dataSource.url.Hostname())
-	assert.Equal(t, "5432", dataSource.url.Port())
+	assert.NotNil(t, dataSource.GetURL())
+	assert.Equal(t, "localhost:5432", dataSource.GetURL().Host)
+	assert.Equal(t, "localhost", dataSource.GetURL().Hostname())
+	assert.Equal(t, "5432", dataSource.GetURL().Port())
 
-	assert.NotNil(t, dataSource.url.User)
-	assert.Equal(t, "username", dataSource.url.User.Username())
-	password, _ := dataSource.url.User.Password()
+	assert.NotNil(t, dataSource.GetURL().User)
+	assert.Equal(t, "username", dataSource.GetURL().User.Username())
+	password, _ := dataSource.GetURL().User.Password()
 	assert.Equal(t, "password", password)
 }
 
@@ -154,8 +154,8 @@ func TestGetDataSource(t *testing.T) {
 
 	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 	assert.NotNil(t, dataSource.GetURL())
-	assert.Equal(t, "localhost", dataSource.url.Hostname())
-	assert.Equal(t, "5432", dataSource.url.Port())
+	assert.Equal(t, "localhost", dataSource.GetURL().Hostname())
+	assert.Equal(t, "5432", dataSource.GetURL().Port())
 	assert.Empty(t, dataSource.GetUsername())
 	assert.Empty(t, dataSource.GetPassword())
 }
@@ -167,8 +167,8 @@ func TestGetDataSourceWithUsernameAndPassword(t *testing.T) {
 
 	assert.Equal(t, "driver-name", dataSource.GetDriverName())
 	assert.NotNil(t, dataSource.GetURL())
-	assert.Equal(t, "localhost", dataSource.url.Hostname())
-	assert.Equal(t, "5432", dataSource.url.Port())
+	assert.Equal(t, "localhost", dataSource.GetURL().Hostname())
+	assert.Equal(t, "5432", dataSource.GetURL().Port())
 	assert.Equal(t, "username", dataSource.GetUsername())
 	assert.Equal(t, "password", dataSource.GetPassword())
 }

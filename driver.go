@@ -7,22 +7,21 @@ import (
 )
 
 type DataSourceNameAdapter interface {
-	GetDataSourceName(dataSource *DataSource) (string, error)
-}
-
-type Driver interface {
-	driver.Driver
-	DataSourceNameAdapter
+	GetDataSourceName(dataSource DataSource) (string, error)
 }
 
 var (
-	driversMu sync.RWMutex
-	drivers   = make(map[string]Driver)
+	dsnAdapterMu sync.RWMutex
+	dsnAdapters  = make(map[string]DataSourceNameAdapter)
 )
 
-func Register(name string, driver Driver) {
-	driversMu.Lock()
-	defer driversMu.Unlock()
+func Register(name string, driver driver.Driver, dsnAdapter DataSourceNameAdapter) {
+	dsnAdapterMu.Lock()
+	defer dsnAdapterMu.Unlock()
 	sql.Register(name, driver)
-	drivers[name] = driver
+
+	if dsnAdapter == nil {
+		panic("sql: DSN adapter is nil")
+	}
+	dsnAdapters[name] = dsnAdapter
 }
