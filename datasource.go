@@ -52,8 +52,8 @@ func (dataSource *DataSource) GetConnection() (*sql.DB, error) {
 	return sql.Open(dataSource.driverName, dataSourceName)
 }
 
-func GetDataSource(uri string, options ...DataSourceOption) (*DataSource, error) {
-	dataSource, err := parse(uri)
+func GetDataSource(url string, options ...DataSourceOption) (*DataSource, error) {
+	dataSource, err := parse(url)
 	if err != nil {
 		return nil, err
 	}
@@ -76,15 +76,15 @@ func Password(password string) DataSourceOption {
 	}
 }
 
-func parse(uri string) (*DataSource, error) {
-	src := strings.Split(uri, ":")
+func parse(dataSourceUrl string) (*DataSource, error) {
+	src := strings.Split(dataSourceUrl, ":")
 	if len(src) < 3 {
-		return nil, errors.New("uri format is wrong : " + uri)
+		return nil, errors.New("url format is wrong : " + dataSourceUrl)
 	}
 
 	scheme := src[0]
 	if Scheme != scheme {
-		return nil, errors.New("uri must start with 'gdbc'")
+		return nil, errors.New("url must start with 'gdbc'")
 	}
 
 	driverName := src[1]
@@ -96,7 +96,7 @@ func parse(uri string) (*DataSource, error) {
 		driverName: driverName,
 	}
 	rest := strings.Join(append(src[:1], src[2:]...), ":")
-	if len(rest) != 0 {
+	if rest != Scheme+":" {
 		parsedUrl, err := url.ParseRequestURI(rest)
 		if err != nil {
 			return nil, err
@@ -104,5 +104,5 @@ func parse(uri string) (*DataSource, error) {
 		dataSource.url = parsedUrl
 		return dataSource, nil
 	}
-	return nil, errors.New("uri format is not wrong : " + uri)
+	return nil, errors.New("url format is wrong : " + dataSourceUrl)
 }
