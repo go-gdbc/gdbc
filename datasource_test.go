@@ -1,6 +1,7 @@
 package gdbc
 
 import (
+	"database/sql"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -185,4 +186,29 @@ func TestGetDataSourceUrlWithWrongFormat(t *testing.T) {
 	assert.Nil(t, dataSource)
 	assert.NotNil(t, err)
 	assert.Equal(t, "url format is wrong : "+dataSourceUrl, err.Error())
+}
+
+func TestGetConnectionForNonRegisteredDriver(t *testing.T) {
+	dataSourceUrl := "gdbc:driver-name://username:password@localhost:5432"
+	dataSource, err := GetDataSource(dataSourceUrl)
+	assert.NotNil(t, dataSource)
+	assert.Nil(t, err)
+
+	var connection *sql.DB
+	connection, err = dataSource.GetConnection()
+	assert.Nil(t, connection)
+	assert.NotNil(t, err)
+	assert.Equal(t, "sql: dsn adapter does not exist : driver-name", err.Error())
+}
+
+func TestGetConnectionForRegisteredDriver(t *testing.T) {
+	dataSourceUrl := "gdbc:testDriver1://username:password@localhost:5432"
+	dataSource, err := GetDataSource(dataSourceUrl)
+	assert.NotNil(t, dataSource)
+	assert.Nil(t, err)
+
+	var connection *sql.DB
+	connection, err = dataSource.GetConnection()
+	assert.NotNil(t, connection)
+	assert.Nil(t, err)
 }
