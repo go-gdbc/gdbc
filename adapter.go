@@ -46,13 +46,7 @@ func GetDataSourceNameAdapter(driverAliasName string) DataSourceNameAdapter {
 	if !ok {
 		return nil
 	}
-
-	var adapter DataSourceNameAdapter
-	adapter, ok = dsnAdapters[driverName]
-	if !ok {
-		return nil
-	}
-	return adapter
+	return dsnAdapters[driverName]
 }
 
 func GetDriverName(driverAliasName string) (string, bool) {

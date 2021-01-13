@@ -211,3 +211,15 @@ func TestGetConnectionForRegisteredDriver(t *testing.T) {
 	assert.NotNil(t, connection)
 	assert.Nil(t, err)
 }
+
+func TestGetConnectionForRegisteredDriverWithAdapterReturningError(t *testing.T) {
+	dataSourceUrl := "gdbc:driver2://username:password@localhost:5432"
+	dataSource, err := GetDataSource(dataSourceUrl)
+	assert.NotNil(t, dataSource)
+	assert.Nil(t, err)
+
+	var connection *sql.DB
+	connection, err = dataSource.GetConnection()
+	assert.Nil(t, connection)
+	assert.NotNil(t, err)
+}

@@ -63,3 +63,34 @@ func TestRegisterWithNilAdapter(t *testing.T) {
 		Register("testDriver", "test", nil)
 	})
 }
+
+func TestRegisterWithSameAliasName(t *testing.T) {
+	assert.Panics(t, func() {
+		Register("testDriver1", "test", nil)
+		Register("testDriver2", "test", nil)
+	})
+}
+
+func TestRegisterWithSameDriverName(t *testing.T) {
+	assert.Panics(t, func() {
+		Register("testDriver", "test1", nil)
+		Register("testDriver", "test2", nil)
+	})
+}
+
+func TestRegisterWithEmptyDriverOrDriverAliasName(t *testing.T) {
+	assert.Panics(t, func() {
+		Register("", "test1", nil)
+		Register("testDriver", "", nil)
+	})
+}
+
+func TestGetDriverName(t *testing.T) {
+	driverName, ok := GetDriverName("driver1")
+	assert.True(t, ok)
+	assert.Equal(t, "testDriver1", driverName)
+
+	driverName, ok = GetDriverName("driver3")
+	assert.False(t, ok)
+	assert.Equal(t, "", driverName)
+}
