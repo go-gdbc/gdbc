@@ -1,5 +1,11 @@
 # GDBC - Go Database Connectivity
-Data Source Name, known as DSN does not have any standard format. 
+Because Data Source Name, known as DSN does not have any standard format, the driver libraries have their 
+driver-specific DSN. Sometimes you might get confused about how to specify your DSN for the database you 
+want to connect to. In order to solve this issue, GDBC provides a connection format to represent the database, 
+and an abstract layer for database connections. 
+
+Note that drivers have to be registered by using **gdbc.Register** instead **sql.Register**.
+Otherwise, you cannot connect to the database by using gdbc.
 
 With GDBC, a database is represented by a URL (Uniform Resource Locator).
 URL takes one of the following forms:
@@ -12,9 +18,10 @@ gdbc:driver-name:file:h2?arg1=value1&arg2=value...
 ```
 
 ## How to use GDBC?
+It's pretty easy to connect the database. You can connect to the database as shown below.
 
 ```go
-dataSource, err := GetDataSource("gdbc:driver-name://localhost:5432/test-db", Username("username"), Password("password"))
+dataSource, err := gdbc.GetDataSource("gdbc:driver-name://localhost:5432/test-db", Username("username"), Password("password"))
 if err != nil {
     panic(err)
 }
@@ -29,9 +36,10 @@ if err != nil {
 ```
 
 ## Adapter
+
 ```go
 type DataSourceNameAdapter interface {
-	GetDataSourceName(dataSource *DataSource) (string, error)
+	GetDataSourceName(dataSource DataSource) (string, error)
 }
 ```
 
