@@ -55,7 +55,7 @@ func (dataSource *SimpleDataSource) SetPassword(password string) {
 
 func (dataSource *SimpleDataSource) GetConnection() (*sql.DB, error) {
 	dsnAdapterMu.RLock()
-	dsnAdapter, ok := dsnAdapters[dataSource.driverName]
+	dsnAdapter, ok := dsnAdapters[GdbcDriverPrefix+dataSource.driverName]
 	dsnAdapterMu.RUnlock()
 
 	if !ok {
@@ -67,7 +67,7 @@ func (dataSource *SimpleDataSource) GetConnection() (*sql.DB, error) {
 		return nil, err
 	}
 
-	return sql.Open(dataSource.driverName, dataSourceName)
+	return sql.Open(GdbcDriverPrefix+dataSource.driverName, dataSourceName)
 }
 
 func GetDataSource(url string, options ...DataSourceOption) (DataSource, error) {
