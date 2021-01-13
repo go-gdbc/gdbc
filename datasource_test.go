@@ -145,7 +145,6 @@ func TestParseDataSourceUrlWithWrongHostFormat(t *testing.T) {
 	dataSource, err := parse(dataSourceUrl)
 	assert.Nil(t, dataSource)
 	assert.NotNil(t, err)
-	assert.Equal(t, "parse gdbc://localhost:port:wtf: invalid port \":wtf\" after host", err.Error())
 }
 
 func TestGetDataSource(t *testing.T) {
