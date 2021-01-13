@@ -27,3 +27,13 @@ func Register(name string, driver driver.Driver, dsnAdapter DataSourceNameAdapte
 	}
 	dsnAdapters[GdbcDriverPrefix+name] = dsnAdapter
 }
+
+func GetDataSourceNameAdapter(driverName string) DataSourceNameAdapter {
+	dsnAdapterMu.RLock()
+	dsnAdapter, ok := dsnAdapters[GdbcDriverPrefix+driverName]
+	dsnAdapterMu.RUnlock()
+	if !ok {
+		return nil
+	}
+	return dsnAdapter
+}
