@@ -35,7 +35,10 @@ if err != nil {
 
 ```
 
-## Adapter
+## Register your existing driver
+If you have already an existing driver written and want to support GDBC, you have to implement the following 
+**DataSourceNameAdapter** interface converting GDBC format to your specific DSN format, and register your
+driver by using **gdbc.Register** function.
 
 ```go
 type DataSourceNameAdapter interface {
