@@ -1,4 +1,9 @@
 # GDBC - Go Database Connectivity
+[![Go Report Card](https://goreportcard.com/badge/github.com/go-gdbc/gdbc)](https://goreportcard.com/report/github.com/go-gdbc/gdbc)
+[![codecov](https://codecov.io/gh/go-gdbc/gdbc/branch/master/graph/badge.svg?token=VT4CY2UXNQ)](https://codecov.io/gh/go-gdbc/gdbc)
+[![Build Status](https://travis-ci.com/go-gdbc/gdbc.svg?branch=master)](https://travis-ci.com/go-gdbc/gdbc)
+
+
 Because Data Source Name, known as DSN does not have any standard format, the driver libraries have their 
 driver-specific DSN. Sometimes you might get confused about how to specify your DSN for the database you 
 want to connect to. In order to solve this issue, GDBC provides a common format to represent the database, 

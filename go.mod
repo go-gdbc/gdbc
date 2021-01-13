@@ -1,4 +1,4 @@
-module github.com/procyon-projects/gdbc
+module github.com/go-gdbc/gdbc
 
 go 1.13
 
