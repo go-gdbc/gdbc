@@ -7,10 +7,7 @@
 Because Data Source Name, known as DSN does not have any standard format, the driver libraries have their 
 driver-specific DSN. Sometimes you might get confused about how to specify your DSN for the database you 
 want to connect to. In order to solve this issue, GDBC provides a common format to represent the database, 
-and an abstract layer for database connections. 
-
-Note that drivers have to be registered by using **gdbc.Register** instead **sql.Register**.
-Otherwise, you cannot connect to the database by using gdbc.
+and an abstract layer for database connections.
 
 With GDBC, a database is represented by a URL (Uniform Resource Locator).
 URL takes one of the following forms:
