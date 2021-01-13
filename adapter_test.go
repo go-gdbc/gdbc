@@ -1,6 +1,7 @@
 package gdbc
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"errors"
 	"github.com/stretchr/testify/assert"
@@ -8,8 +9,10 @@ import (
 )
 
 func init() {
-	Register("testDriver1", &testDriver1{}, &testDriver1DataSourceNameAdapter{})
-	Register("testDriver2", &testDriver2{}, &testDriver2DataSourceNameAdapter{})
+	sql.Register("testDriver1", &testDriver1{})
+	sql.Register("testDriver2", &testDriver2{})
+	Register("testDriver1", "driver1", &testDriver1DataSourceNameAdapter{})
+	Register("testDriver2", "driver2", &testDriver2DataSourceNameAdapter{})
 }
 
 type testConnection struct {
@@ -57,6 +60,6 @@ func (adapter testDriver2DataSourceNameAdapter) GetDataSourceName(dataSource Dat
 
 func TestRegisterWithNilAdapter(t *testing.T) {
 	assert.Panics(t, func() {
-		Register("testDriver", &testDriver1{}, nil)
+		Register("testDriver", "test", nil)
 	})
 }

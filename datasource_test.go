@@ -197,11 +197,11 @@ func TestGetConnectionForNonRegisteredDriver(t *testing.T) {
 	connection, err = dataSource.GetConnection()
 	assert.Nil(t, connection)
 	assert.NotNil(t, err)
-	assert.Equal(t, "sql: dsn adapter does not exist : driver-name", err.Error())
+	assert.Equal(t, "sql: driver does not exist : driver-name", err.Error())
 }
 
 func TestGetConnectionForRegisteredDriver(t *testing.T) {
-	dataSourceUrl := "gdbc:testDriver1://username:password@localhost:5432"
+	dataSourceUrl := "gdbc:driver1://username:password@localhost:5432"
 	dataSource, err := GetDataSource(dataSourceUrl)
 	assert.NotNil(t, dataSource)
 	assert.Nil(t, err)

@@ -54,12 +54,9 @@ func (dataSource *SimpleDataSource) SetPassword(password string) {
 }
 
 func (dataSource *SimpleDataSource) GetConnection() (*sql.DB, error) {
-	dsnAdapterMu.RLock()
-	dsnAdapter, ok := dsnAdapters[GdbcDriverPrefix+dataSource.driverName]
-	dsnAdapterMu.RUnlock()
-
-	if !ok {
-		return nil, fmt.Errorf("sql: dsn adapter does not exist : %s", dataSource.driverName)
+	dsnAdapter := GetDataSourceNameAdapter(dataSource.driverName)
+	if dsnAdapter == nil {
+		return nil, fmt.Errorf("sql: driver does not exist : %s", dataSource.driverName)
 	}
 
 	dataSourceName, err := dsnAdapter.GetDataSourceName(dataSource)
@@ -67,7 +64,8 @@ func (dataSource *SimpleDataSource) GetConnection() (*sql.DB, error) {
 		return nil, err
 	}
 
-	return sql.Open(GdbcDriverPrefix+dataSource.driverName, dataSourceName)
+	driverName := driverNameMap[dataSource.driverName]
+	return sql.Open(driverName, dataSourceName)
 }
 
 func GetDataSource(url string, options ...DataSourceOption) (DataSource, error) {
