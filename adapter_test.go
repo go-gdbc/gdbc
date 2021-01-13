@@ -66,15 +66,15 @@ func TestRegisterWithNilAdapter(t *testing.T) {
 
 func TestRegisterWithSameAliasName(t *testing.T) {
 	assert.Panics(t, func() {
-		Register("testDriver1", "test", nil)
-		Register("testDriver2", "test", nil)
+		Register("testDriver3", "test", testDriver1DataSourceNameAdapter{})
+		Register("testDriver4", "test", testDriver2DataSourceNameAdapter{})
 	})
 }
 
 func TestRegisterWithSameDriverName(t *testing.T) {
 	assert.Panics(t, func() {
-		Register("testDriver", "test1", nil)
-		Register("testDriver", "test2", nil)
+		Register("testDriver", "test1", testDriver1DataSourceNameAdapter{})
+		Register("testDriver", "test2", testDriver2DataSourceNameAdapter{})
 	})
 }
 
